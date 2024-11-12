@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package user_rpc;
+option go_package = "./chat_rpc";
+message UserChatRequest{
+  uint32 sned_user_id = 1;
+  uint32 rev_user_id = 2;
+  bytes msg = 3;//msg的json格式，msgPreview通过msg和system_msg算出来
+  bytes system_msg = 4;//系统消息
+}
+message UserChatResponse{
+
+}
+message UserListChatCountRequest{
+  repeated uint32 user_id_list = 1;//用户id列表
+}
+message ChatCountMessage{
+  int32 send_msg_count = 1;
+  int32 rev_msg_count = 2;
+}
+message UserListChatCountResponse{
+  map<uint32, ChatCountMessage>result = 1;//key为用户id，value为聊天数量
+}
+service Chat{
+  rpc UserChat(UserChatRequest) returns (UserChatResponse);//用户聊天
+  rpc UserListChatCount(UserListChatCountRequest)returns(UserListChatCountResponse);//获取用户聊天数量
+}

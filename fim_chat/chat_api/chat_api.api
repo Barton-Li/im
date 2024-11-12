@@ -1,0 +1,76 @@
+syntax = "v1"
+
+type ChatHisoryRequest {
+	UserID   uint `header:"user_id"`
+	Page     int  `form:"page,optional"`
+	Limit    int  `form:"limit,optional"`
+	FriendID uint `form:"friend_id"`
+}
+
+type ChatHisoryResponse {
+	ID        uint   `json:"id"`
+	UserID    uint   `json:"user_id"`
+	Avatar    string `json:"avatar"`
+	Nickname  string `json:"nickname"`
+	CreatedAt string `json:"created_at"`
+}
+
+type ChatSessionRequest {
+	UserID uint `header:"user_id"`
+	Page   int  `form:"page,optional"`
+	Limit  int  `form:"limit,optional"`
+	Key    int  `form:"key,optional"`
+}
+
+type ChatSession {
+	UserID     uint   `json:"user_id"`
+	Avatar     string `json:"avatar"`
+	Nickname   string `json:"nickname"`
+	CreatedAt  string `json:"created_at"`
+	MsgPreview string `json:"msg_preview"`
+	IsTop      bool   `json:"is_top"`
+	IsOnline   bool   `json:"is_online"`
+}
+
+type ChatSessionResponse {
+	List  []ChatSession `json:"list"`
+	Count int64         `json:"count"`
+}
+
+type userTopRequest {
+	UserID   uint `header:"user_id"`
+	FriendID uint `json: "friend_id"`
+}
+
+type userToopResponse {}
+
+type chatDeleteRequest {
+	UserID uint   `header:"user_id"`
+	IdList []uint `json:"id_list"`
+}
+
+type chatDeleteResponse {}
+
+type chatRequest {
+	UserID uint `header:"user_id"`
+}
+
+type chatResponse {}
+
+service chat {
+	@handler chatHistory
+	get /api/chat/history (ChatHisoryRequest) returns (ChatHisoryResponse) //获取聊天记录
+
+	@handler chatSession
+	get /api/chat/session (ChatSessionRequest) returns (ChatSessionResponse) //获取聊天会话列表
+
+	@handler userTop
+	post /api/chat/user_top (userTopRequest) returns (userToopResponse) //置顶
+
+	@handler chatDelete
+	delete /api/chat/chat (chatDeleteRequest) returns (chatDeleteResponse) //删除对话
+
+	@handler chatHandler
+	get /api/chat/ws/chat (chatRequest) returns (chatResponse) //websocket对话
+}
+

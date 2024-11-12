@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package user_rpc;
+option go_package = "./user_rpc";
+
+message UserCreateRequest {
+    string nick_name = 1;
+    string password = 2;
+  int32 role=3;
+  string avatar=4;
+  string open_id=5;
+  string register_source=6;
+}
+
+message UserCreateResponse {
+    int32 user_id = 1;
+}
+
+message UserInfoRequest{
+  uint32 user_id=1;
+}
+
+message UserInfoResponse {
+  bytes data = 1; // 用户和用户配置的json
+}
+
+message UserInfo {
+  string nick_name = 1;
+  string avatar = 2;
+}
+
+message UserBaseInfoRequest{
+  uint32 user_id = 1;
+}
+message UserBaseInfoResponse{
+  uint32 user_id = 1;
+  string nick_name = 2;
+  string avatar = 3;
+}
+
+message UserListInfoRequest {
+  repeated uint32 user_id_list = 1; // 用户id列表
+}
+
+message UserListInfoResponse {
+  map<uint32, UserInfo> user_info = 1; // 用户信息
+}
+
+message IsFriendRequest{
+  uint32 user1 = 1;
+  uint32 user2 = 2;
+}
+message IsFriendResponse{
+  bool is_friend = 1;
+}
+
+message FriendListRequest{
+  uint32 user = 1;
+}
+
+message FriendInfo {
+  uint32 user_id = 1;
+  string nick_name = 2;
+  string avatar = 3;
+}
+
+message FriendListResponse{
+  repeated FriendInfo friend_list = 1;
+}
+
+
+message UserOnlineListRequest{
+
+}
+
+message UserOnlineListResponse{
+  repeated uint32 user_id_list = 1;
+}
+
+service Users {
+  rpc UserCreate(UserCreateRequest) returns(UserCreateResponse); // 创建用户
+  rpc UserInfo(UserInfoRequest) returns(UserInfoResponse); // 用户信息
+  rpc UserBaseInfo(UserBaseInfoRequest) returns(UserBaseInfoResponse); // 用户基本信息
+  rpc UserListInfo(UserListInfoRequest) returns(UserListInfoResponse); // 用户列表信息
+  rpc IsFriend(IsFriendRequest) returns(IsFriendResponse); // 是否是好友
+  rpc FriendList(FriendListRequest) returns(FriendListResponse); // 好友列表
+  rpc UserOnlineList(UserOnlineListRequest) returns(UserOnlineListResponse); // 在线的用户id列表
+}
+
+// goctl rpc protoc user_rpc.proto --go_out=./types --go-grpc_out=./types --zrpc_out=.

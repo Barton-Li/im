@@ -1,0 +1,54 @@
+// LoginRequest 定义了登录请求的结构体
+type LoginRequest {
+	UserName string `json:"username"` // 用户名
+	Password string `json:"password"` // 密码
+}
+
+// LoginResponse 定义了登录响应的结构体，包含一个token
+type LoginResponse {
+	Token string `json:"token"` // 登录成功后返回的token
+}
+
+// OpenLoginInfoRespone 定义了开放登录信息响应的结构体，包含名称、图标和跳转链接
+type OpenLoginInfoRespone {
+	Name string `json:"name"` // 名称
+	Icon string `json:"icon"` // 图标
+	Href string `json:"href"` // 跳转链接
+}
+
+// OpenLoginRequest 定义了开放登录请求的结构体，包含授权码和登录标识
+type OpenLoginRequest {
+	Code string `json:"code"` // 授权码
+	Flag string `json:"flag"` // 登录标识，区分登录类型
+}
+
+// AuthenticationRequest 定义了认证请求的结构体，包含token和可选的验证路径
+type AuthenticationRequest {
+	Token    string `header:'Token,required'` // token
+	ValiPath string `header:'ValiPath,optional'` // 验证路径
+}
+
+// AuthenticationResponse 定义了认证响应的结构体，包含用户ID和角色
+type AuthenticationResponse {
+	UserID uint `json:"userid"` // 用户ID
+	Role   int8  `json:"role"` // 角色
+}
+
+// service auth 定义了认证服务，包括登录、认证、登出和开放登录接口
+service auth {
+	// login 处理用户登录请求，接收LoginRequest，返回LoginResponse
+	@handler login
+	post /api/auth/login (LoginRequest) returns (LoginResponse)
+
+	// authentication 处理用户认证请求，接收AuthenticationRequest，返回AuthenticationResponse
+	@handler authentication
+	post /api/auth/authentication (AuthenticationRequest) returns (AuthenticationResponse)
+
+	// logout 处理用户登出请求，无输入参数，返回登出结果
+	@handler logout
+	post /api/auth/logout returns (string)
+
+	// open_login 处理开放登录请求，接收OpenLoginRequest，返回LoginResponse
+	@handler open_login
+	post /api/auth/open_login (OpenLoginRequest) returns (LoginResponse)
+}

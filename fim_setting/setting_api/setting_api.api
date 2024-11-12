@@ -1,0 +1,10 @@
+syntax = "v1"
+type OpenLoginInfoResponse {
+    Name string `json:"name"`
+    Icon string `json:"icon"`
+    Href string `json:"href"` // 跳转地址
+}
+service settings{
+@handler open_login_info
+get /api/settings/open_login_info returns ([]OpenLoginInfoResponse)
+}

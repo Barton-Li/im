@@ -1,0 +1,36 @@
+Name: auth
+Host: 0.0.0.0
+Port: 20021
+Mysql:
+  DataSource: root:root@tcp(127.0.0.1:3306)/fim_db?charset=utf8mb4&parseTime=True&loc=Local
+Auth:
+  AccessSecret: dff1234
+  AccessExpire: 3600
+Log:
+  Encoding: plain
+  TimeFormat: 2006-01-02 15:04:05
+  Stat: false
+Redis:
+  Addr: 127.0.0.1:6379
+  Password:
+  DB: 0
+Etcd: 127.0.0.1:2382
+QQ:
+  AppID: "101974593"
+  AppKey: "9f2d0d9d51d55d5d1d5d5d"
+  Redirect: http://www.fengfengzhidao.com/login?flag=qq
+OpenLoginList:
+  - name: QQ登录
+    icon: https://www.fengfengzhidao.com/image/icon/qq.png
+    href: https://graph.qq.com/oauth2.0/show?which=Login&display=pc&response_type=code&client_id=101974593&redirect_uri=http://www.fengfengzhidao.com/login?flag=qq
+UserRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2382
+    Key: userrpc.rpc
+Whitelist:
+  - /api/auth/login
+  - /api/auth/open_login
+  - /api/auth/authentication
+  - /api/auth/logout
+  - /api/file/.{8}-.{4}-.{4}-.{4}-.{12}

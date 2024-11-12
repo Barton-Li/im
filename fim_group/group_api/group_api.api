@@ -1,0 +1,387 @@
+syntax = "v1"
+
+info (
+	title:   "type title here"
+	desc:    "type desc here"
+	author:  "type author here"
+	email:   "type email here"
+	version: "type version here"
+)
+
+type groupCreateRequest {
+	UserID     uint   `header:"user_id"`
+	Mode       int8   `json:"mode",optional` //模式 1直接创建 2选人创建
+	Name       string `json:"name",optional`
+	IsSearch   bool   `json:"is_search",optional` //是否可搜索
+	Size       int    `json:"size",optional` //群组大小
+	UserIDList []uint `json:"user_id_list",optional` //用户ID列表
+}
+
+type groupCreateResponse {}
+
+type groupInfoRequest {
+	UserID uint `header:"user_id"`
+	ID     uint `path:"id"` //群组ID
+}
+
+type UserInfo {
+	UserID   uint   `json:"user_id"`
+	Avatar   string `json:"avatar"`
+	Nickname string `json:"nickname"`
+}
+
+type VerificationQuestion {
+	Problem1 *string `json:"problem1,optional" conf:"problem1"`
+	Problem2 *string `json:"problem2,optional" conf:"problem2"`
+	Problem3 *string `json:"problem3,optional" conf:"problem3"`
+	Answer1  *string `json:"answer1,optional" conf:"answer1"`
+	Answer2  *string `json:"answer2,optional" conf:"answer2"`
+	Answer3  *string `json:"answer3,optional" conf:"answer3"`
+}
+
+type groupInfoResponse {
+	GroupID              uint                  `json:"group_id"` //群组ID
+	Title                string                `json:"title"` //群名称
+	Abstract             string                `json:"abstract"` //群简介
+	MemberCount          int                   `json:"member_count"` //群成员数量
+	MemberOnlineCount    int                   `json:"member_online_count"` //在线成员数量
+	Avatar               string                `json:"avatar"` //头像
+	Creator              UserInfo              `json:"creator"` //群主
+	AdminList            []UserInfo            `json:"admin_list"` //管理员列表
+	Role                 int8                  `json:"role"` //群组角色 1群主 2管理员 3普通成员
+	IsProhibition        bool                  `json:"is_prohibition"` //是否禁言
+	ProhibitionTime      *int                  `json:"prohibition_time"` //禁言时间
+	IsSearch             bool                  `json:"is_search"` //是否可搜索
+	Verification         *int8                 `json:"verification,optional",conf:"verification"` //验证方式
+	IsInvite             *bool                 `json:"is_invite,optional",conf:"is_invite"` //是否可邀请
+	IsTemporarySession   *bool                 `json:"is_temporary_session,optional",conf:"is_temporary_session"` //是否可临时会话
+	VerificationQuestion *VerificationQuestion `json:"verification_question,optional",conf:"verification_question"`
+}
+
+type groupUpdateRequest {
+	UserID               uint                  `header:"user_id"`
+	ID                   uint                  `json:"id"` //群组ID
+	IsSearch             *bool                 `json:"is_search,optional"` //是否可搜索
+	Avatar               *string               `json:"avatar,optional"` //头像
+	Abstract             *string               `json:"abstract,optional"  conf:"abstract"` // 群简介
+	Title                *string               `json:"title,optional"  conf:"title"` // 群名
+	Verification         *int8                 `json:"verification,optional"  conf:"verification"` // 群验证
+	IsInvite             *bool                 `json:"isInvite,optional"  conf:"is_invite"` // 是否可邀请好友
+	IsTemporarySession   *bool                 `json:"isTemporarySession,optional"  conf:"is_temporary_session"` // 是否开启临时会话
+	IsProhibition        *bool                 `json:"isProhibition,optional" conf:"is_prohibition"` // 是否开启全员禁言
+	VerificationQuestion *VerificationQuestion `json:"verificationQuestion,optional" conf:"verification_question"`
+}
+
+type groupUpdateResponse {}
+
+type groupRemoveRequest {
+	UserID uint `header:"user_id"`
+	ID     uint `path:"id"` //群组ID
+}
+
+type groupRemoveResponse {}
+
+type groupMemberRequest {
+	UserID uint   `header:"user_id"`
+	ID     uint   `form:"id"`
+	Page   int    `form:"page,optional"`
+	Limit  int    `form:"limit,optional"`
+	Sort   string `form:"sort,optional"`
+}
+
+type GroupMemberInfo {
+	UserID          uint   `json:"user_id"`
+	UserNickname    string `json:"user_nickname"`
+	Avatar          string `json:"avatar"`
+	IsOnline        bool   `json:"is_online"`
+	Role            int8   `json:"role"`
+	MemberNickname  string `json:"member_nickname"`
+	CreatedAt       string `json:"created_at"`
+	NewMsgDate      string `json:"new_msg_date"`
+	IsFriend        bool   `json:"is_friend"`
+	ProhibitionTime *int   `json:"prohibition_time"`
+}
+
+type groupMemberResponse {
+	List  []GroupMemberInfo `json:"list"`
+	Count int               `json:"count"`
+}
+
+type groupMemberRemoveRequest {
+	UserID   uint `header:"user_id"`
+	ID       uint `form:"id"`
+	MemberID uint `form:"member_id"`
+}
+
+type groupMemberRemoveResponse {}
+
+type groupMemberAddRequest {
+	UserID       uint   `header:"user_id"`
+	ID           uint   `json:"id"`
+	MemberIDList []uint `json:"memberIdList"`
+}
+
+type groupMemberAddResponse {}
+
+type groupMemberNicknameUpdateRequest {
+	UserID   uint   `header:"user_id"`
+	ID       uint   `json:"id"` //群组ID
+	MemberID uint   `json:"member_id"` //群成员ID
+	Nickname string `json:"nickname"` //群成员昵称
+}
+
+type groupMemberNicknameUpdateResponse {}
+
+type groupMemberRoleUpdateRequest {
+	UserID   uint `header:"user_id"` //用户ID
+	ID       uint `json:"id"` //群组ID
+	MemberID uint `json:"member_id"` //群成员ID
+	Role     int8 `json:"role"` //群成员角色 1群主 2管理员 3普通成员
+}
+
+type groupMemberRoleUpdateResponse {}
+
+type groupfriendsListRequest {
+	UserID uint `header:"user_id"` //用户ID
+	ID     uint `form:"id"` //群组ID
+}
+
+type GroupfriendsResponse {
+	UserID    uint   `json:"user_id"` //用户ID
+	Avatar    string `json:"avatar"` //头像
+	Nickname  string `json:"nickname"` //昵称
+	IsInGroup bool   `json:"is_in_group"` //是否在群组中
+}
+
+type groupfriendsListResponse {
+	List  []GroupfriendsResponse `json:"list"` //好友列表
+	Count int                    `json:"count"` //好友数量
+}
+
+type groupSearchRequest {
+	UserID uint   `header:"user_id"` //用户ID
+	Key    string `form:"key,optional"` //搜索关键字
+	Page   int    `form:"page,optional"` //页码
+	Limit  int    `form:"limit,optional"` //每页数量
+}
+
+type GroupSearchResponse {
+	GroupID         uint   `json:"group_id"` //群组ID
+	Title           string `json:"title"` //群名称
+	Abstract        string `json:"abstract"` //群简介
+	Avatar          string `json:"avatar"` //头像
+	IsInGroup       bool   `json:"is_in_group"` //是否在群组中
+	UserCount       int    `json:"user_count"` //群成员数量
+	UserOnlineCount int    `json:"user_online_count"` //在线成员数量
+}
+
+type groupSearchListResponse {
+	List  []GroupSearchResponse `json:"list"` //群组列表
+	Count int                   `json:"count"` //群组数量
+}
+
+type groupValidRequest {
+	UserID  uint `header:"user_id"` //用户ID
+	GroupID uint `path:"id"` //群组ID
+}
+
+type groupValidResponse {
+	Verification         int8                 `json:"verification"` //验证方式
+	VerificationQuestion VerificationQuestion `json:"verification_question"` //验证问题
+}
+
+type groupValidAddRequest {
+	UserID               uint                  `header:"user_id"` //用户ID
+	GroupID              uint                  `json:"group_id"` //群组ID
+	Verify               string                `json:"verify,optional"` //验证答案
+	VerificationQuestion *VerificationQuestion `json:"verification_question"` //验证问题
+}
+
+type groupValidAddResponse {}
+
+type groupValidListRequest {
+	UserID uint `header:"user_id"` //用户ID
+	Page   int  `form:"page,optional"` //页码
+	Limit  int  `form:"limit,optional"` //每页数量
+}
+
+type GroupValidInfoResponse {
+	ID                   uint                  `json:"id"` //群组ID
+	GroupID              uint                  `json:"group_id"` //群组ID
+	UserID               uint                  `json:"user_id"` //用户ID
+	UserNickname         string                `json:"user_nickname"` //用户昵称
+	Status               int8                  `json:"status"` //状态 1待验证 2已验证 3已拒绝
+	Flage                string                `json:"flage"` //send revc
+	AddtionalMessages    string                `json:"addtional_messages"` //附加消息
+	VerificationQuestion *VerificationQuestion `json:"verification_question"` //验证问题
+	Title                string                `json:"title"` //群名称
+	Avator               string                `json:"avator"` //头像
+	CreatedAt            string                `json:"created_at"` //创建时间
+	Type                 int8                  `json:"type"` //1加群 2退群
+}
+
+type groupValidListResponse {
+	List  []GroupValidInfoResponse `json:"list"` //验证列表
+	Count int                      `json:"count"` //验证数量
+}
+
+type groupValidStatusRequest {
+	UserID  uint `header:"user_id"` //用户ID
+	ValidID uint `json:"valid_id"` //验证ID
+	Status  int8 `json:"status"` //状态 1待验证 2已验证 3已拒绝
+}
+
+type groupValidStatusResponse {}
+
+type groupProhibitionUpdateRequest {
+	UserID          uint `header:"User-ID"`
+	GroupID         uint `json:"groupId"` // 群id
+	MemberID        uint `json:"memberId"`
+	ProhibitionTime *int `json:"prohibitionTime,optional"` // 禁言时间 单位分钟
+}
+
+type groupProhibitionUpdateResponse {}
+
+type groupHistoryRequest {
+	UserID uint `header:"user_id"` //用户ID
+	ID     uint `path:"id"` //群组ID
+	Page   int  `form:"page,optional"` //页码
+	Limit  int  `form:"limit,optional"` //每页数量
+}
+
+type groupHistoryListResponse {}
+
+type groupHistoryDeleteRequest {
+	UserID    uint   `header:"user_id"` //用户ID
+	ID        uint   `json:"id"` //群组ID
+	Page      int    `form:"page,optional"` //页码
+	Limit     int    `form:"limit,optional"` //每页数量
+	MsgIDList []uint `json:"msg_id_list"` //消息ID列表
+}
+
+type groupHistoryDeleteResponse {}
+
+type groupSessionRequest {
+	UserID uint `header:"user_id"` //用户ID
+	Page   int  `form:"page,optional"` //页码
+	Limit  int  `form:"limit,optional"` //每页数量
+}
+
+type GroupSessionResponse {
+	GroupID       uint   `json:"group_id"` //群组ID
+	Title         string `json:"title"` //群名称
+	Avatar        string `json:"avatar"` //头像
+	NewMsgDate    string `json:"new_msg_date"` //最新消息时间
+	NewMsgPreview string `json:"new_msg_preview"` //最新消息预览
+	IsTop         bool   `json:"is_top"` //是否置顶
+}
+
+type groupSessionListResponse {
+	List  []GroupSessionResponse `json:"list"`
+	Count int                    `json:"count"`
+}
+
+type groupTopRequest {
+	UserID  uint `header:"user_id"`
+	GroupID uint `json:"group_id"`
+	IsTop   bool `json:"is_top"`
+}
+
+type groupTopResponse {}
+
+type groupMyRequest {
+	UserID uint `header:"user_id"`
+	Mode   int8 `form:"mode"` // 1我创建的 2我加入的
+	Page   int  `form:"page,optional"`
+	Limit  int  `form:"limit,optional"`
+}
+
+type GroupMyResponse {
+	GroupID          uint   `json:"groupId"`
+	GroupTitle       string `json:"groupTitle"`
+	GroupAvatar      string `json:"groupAvatar"`
+	GroupMemberCount int    `json:"groupMemberCount"`
+	Role             int8   `json:"role"` // 角色
+	Mode             int8   `json:"mode"` // 模式  1 我创建的群聊 2 我加入的群聊
+}
+
+type groupMyListResponse {
+	List  []GroupMyResponse `json:"list"`
+	Count int               `json:"count"`
+}
+
+type groupChatRequest {
+	UserID uint `header:"User-ID"`
+}
+
+type groupChatResponse {}
+
+service group {
+	@handler groupCreate //创建群组
+	post /api/group/group (groupCreateRequest) returns (groupCreateResponse)
+
+	@handler groupInfo //获取群组信息
+	get /api/group/group/:id (groupInfoRequest) returns (groupInfoResponse)
+
+	@handler groupUpdate //更新群组信息
+	put /api/group/group (groupUpdateRequest) returns (groupUpdateResponse)
+
+	@handler groupRemove //删除群组
+	delete /api/group/group/:id (groupRemoveRequest) returns (groupRemoveResponse)
+
+	@handler groupMember //群成员列表
+	get /api/group/member (groupMemberRequest) returns (groupMemberResponse)
+
+	@handler groupMemberRemove //删除群成员
+	delete /api/group/member (groupMemberRemoveRequest) returns (groupMemberRemoveResponse)
+
+	@handler groupMemberAdd //添加群成员
+	post /api/group/member (groupMemberAddRequest) returns (groupMemberAddResponse)
+
+	@handler groupMemberNicknameUpdate //修改群成员昵称
+	put /api/group/member/nickname (groupMemberNicknameUpdateRequest) returns (groupMemberNicknameUpdateResponse)
+
+	@handler groupMemberRoleUpdate //修改群成员角色
+	put /api/group/member/role (groupMemberRoleUpdateRequest) returns (groupMemberRoleUpdateResponse)
+
+	@handler groupfriendsList //获取群成员好友列表
+	get /api/group/friends (groupfriendsListRequest) returns (groupfriendsListResponse)
+
+	@handler groupSearch //搜索群组
+	get /api/group/search (groupSearchRequest) returns (groupSearchListResponse)
+
+	@handler groupValid //验证群组
+	get /api/group/valid/:id (groupValidRequest) returns (groupValidResponse)
+
+	@handler groupValidAdd //验证群组添加
+	post /api/group/valid (groupValidAddRequest) returns (groupValidAddResponse)
+
+	@handler groupValidList //验证群组列表
+	get /api/group/valid (groupValidListRequest) returns (groupValidListResponse)
+
+	@handler groupValidStatus //验证群组状态
+	get /api/group/valid/status/:id (groupValidStatusRequest) returns (groupValidStatusResponse)
+
+	@handler groupProhibitionUpdate //修改群成员禁言状态
+	put /api/group/prohibition (groupProhibitionUpdateRequest) returns (groupProhibitionUpdateResponse)
+
+	@handler groupHistory //获取群历史消息
+	get /api/group/history/:id (groupHistoryRequest) returns (groupHistoryListResponse)
+
+	@handler groupHistoryDelete //删除群历史消息
+	delete /api/group/history/:id (groupHistoryDeleteRequest) returns (groupHistoryDeleteResponse)
+
+	@handler groupSession //获取群会话
+	get /api/group/session (groupSessionRequest) returns (groupSearchListResponse)
+
+	@handler groupTop //置顶群会话
+	put /api/group/top (groupTopRequest) returns (groupTopResponse)
+
+	@handler groupMy //我加入的群聊
+	get /api/group/my (groupMyRequest) returns (groupMyListResponse)
+
+	@handler groupChat //群聊
+	get /api/group/ws/chat (groupChatRequest) returns (groupChatResponse)
+}
+
+//goctl api go -api group_api.api -dir . --home ../../template

@@ -1,0 +1,26 @@
+Name: file
+Host: 0.0.0.0
+Port: 20025
+FileSize: 10 # 单位是MB
+Etcd: 192.168.1.1:2382
+Log:
+  Encoding: plain
+  TimeFormat: 2006-01-02 15:04:05
+  Stat: false
+Mysql:
+  DataSource: root:root@tcp(127.0.0.1:3306)/fim_db?charset=utf8mb4&parseTime=True&loc=Local
+UserRpc:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2382
+    Key: userrpc.rpc
+WhiteList:
+  - png
+  - jpg
+  - jpeg
+  - gif
+  - webp
+BlackList:
+  - exe
+MaxBytes: 5368709120
+UploadDir: uploads
